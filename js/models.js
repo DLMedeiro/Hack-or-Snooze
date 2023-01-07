@@ -71,7 +71,7 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory(user, newStory) {
+  static async addStory(user, newStory) {
     // UNIMPLEMENTED: complete this function!
     // Token: localStorage.getItem("token")
 
