@@ -2,6 +2,7 @@
 
 // global to hold the User instance of the currently-logged-in user
 let currentUser;
+let storyId;
 
 /******************************************************************************
  * User login/signup/login
@@ -109,8 +110,55 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
+  console.log(currentUser.favorites);
 
   $allStoriesList.show();
 
   updateNavOnLogin();
 }
+
+async function updateFavorites(evt) {
+  evt.preventDefault();
+  let $target = $(evt.target);
+  let $storyId = $target.closest("li").attr("id");
+
+  let response = await User.searchFavorites(currentUser, $storyId);
+
+  console.log(response);
+
+  // for (let story in currentUser.favorites) {
+  //   if (currentUser.favorites[story].storyId === $storyId) {
+  //     console.log("remove");
+  //   } else {
+  //     console.log("add");
+  //   }
+  // }
+
+  // let idCompare = currentUser.favorites.find(
+  //   (s) => currentUser.favorites[s].storyId == $storyId
+  // );
+
+  // await User.addFavorite(currentUser, $storyId);
+  // if (idCompare === $storyId) {
+  //   await User.removeFavorite(currentUser, $storyId);
+  // } else {
+  //   await User.addFavorite(currentUser, $storyId);
+  // }
+
+  // console.log(idCompare);
+  // console.log($storyId);
+  // Check if id is included in currentUser.favorites/
+  // for (let story in currentUser.favorites) {
+  //   if (story.storyId === $storyId) {
+  //     console.log("add");
+  //     storyId = await User.removeFavorite(currentUser, $storyId);
+  //   } else {
+  //     console.log("remove");
+  //     storyId = await User.addFavorite(currentUser, $storyId);
+  //   }
+  // }
+
+  // console.log($storyId);
+}
+
+$storiesList.on("click", updateFavorites);
