@@ -22,12 +22,12 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story, mark) {
-  console.debug("generateStoryMarkup", story);
+  console.debug("generateStoryMarkup");
 
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
-      <i id="favorite" class = ${icon} </i>
+      ${currentUser ? showThumbUp(story) : ""}
       
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
@@ -37,6 +37,16 @@ function generateStoryMarkup(story, mark) {
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
+}
+
+function showThumbUp(story) {
+  let favoriteStatus = currentUser.favoriteCheck(story);
+  // console.log(favoriteStatus);
+  if (favoriteStatus) {
+    return "<i id='favorite' class = 'fas fa-thumbs-up' </i>";
+  } else {
+    return "<i id='favorite' class = 'far fa-thumbs-up' </i>";
+  }
 }
 
 // function thunbHtml(storyId) {
@@ -82,17 +92,17 @@ function putFavoriteStoriesOnPage() {
   $favoriteStoriesList.show();
 }
 
-function favoriteHtml(storyId) {
-  for (let story of currentUser.favorites) {
-    if (currentUser.favorites[story].storyId === storyId) {
-      let $story = generateStoryMarkup(story, (mark = true));
-      $allStoriesList.append($story);
-    } else {
-      let $story = generateStoryMarkup(story, (mark = false));
-      $allStoriesList.append($story);
-    }
-  }
-}
+// function favoriteHtml(storyId) {
+//   for (let story of currentUser.favorites) {
+//     if (currentUser.favorites[story].storyId === storyId) {
+//       let $story = generateStoryMarkup(story, (mark = true));
+//       $allStoriesList.append($story);
+//     } else {
+//       let $story = generateStoryMarkup(story, (mark = false));
+//       $allStoriesList.append($story);
+//     }
+//   }
+// }
 
 async function addNewStory(evt) {
   evt.preventDefault();

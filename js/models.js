@@ -195,6 +195,18 @@ class User {
     }
   }
 
+  favoriteCheck(story) {
+    return this.favorites.some((s) => s.storyId === story.storyId);
+  }
+  // s => (s.storyId === story.storyId)
+  // function (s) {
+  //   if (s.storyId === story.storyId){
+  //     return s
+  //   }
+  // }
+  // .filter() returns an array of elements which meet some condition. Answers the question “Which elements meet the condition?”
+  // .some() returns true or false. Answers the question “Is there ANY element which meets the condition?”
+
   static async searchFavorites(user, storyId) {
     let search = user.favorites.filter((s) => s.storyId === storyId);
     // Creates an array with the resulting match if found
