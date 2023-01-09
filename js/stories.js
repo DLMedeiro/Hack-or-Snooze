@@ -28,7 +28,7 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
   <li id="${story.storyId}">
-  ${currentUser ? showThumbUp(story) : ""}
+  ${currentUser ? verifyThumbUp(story) : ""}
     <a href="${story.url}" target="a_blank" class="story-link">
       ${story.title}
     </a>
@@ -39,12 +39,12 @@ function generateStoryMarkup(story) {
     `);
 }
 
-function showThumbUp(story) {
+function verifyThumbUp(story) {
   let favoriteStatus = currentUser.favoriteCheck(story);
   if (favoriteStatus) {
-    return `<span> <i id='favorite' class = 'fas fa-thumbs-up'> </i> </span>`;
+    return `<span id = "favoriteIcon"> <i id='favorite' class = 'fas fa-thumbs-up'> </i> </span>`;
   } else {
-    return `<span> <i id='favorite' class = 'far fa-thumbs-up'> </i> </span> `;
+    return `<span id = "favoriteIcon"> <i id='favorite' class = 'far fa-thumbs-up'> </i> </span> `;
   }
 }
 

@@ -119,15 +119,28 @@ function updateUIOnUserLogin() {
 
 async function updateFavorite(evt) {
   let $target = $(evt.target);
+  let $targetI = $target.closest("i");
   let $storyId = $target.closest("li").attr("id");
+  let $currentClass = $target.attr("class");
+  let $currentId = $target.attr("id");
 
   let response = await User.updateFavorites(currentUser, $storyId);
   let story = await StoryList.getStory($storyId);
-  // generateStoryMarkup(story);
-  updateFavoriteStoriesOnPage();
-  console.log(story);
-  console.log(response);
-  location.reload();
+
+  if ($target.hasClass("fas")) {
+    console.log("remove class");
+    $targetI.toggleClass("fas far");
+  } else {
+    console.log("add class");
+    $targetI.toggleClass("fas far");
+  }
+  // The .hasClass() method will return true if the class is assigned to an element, even if other classes also are.
+
+  generateStoryMarkup(story);
+
+  // updateFavoriteStoriesOnPage();
+  console.log($targetI);
+  // location.reload();
 
   // for (let story in currentUser.favorites) {
   //   if (currentUser.favorites[story].storyId === $storyId) {
