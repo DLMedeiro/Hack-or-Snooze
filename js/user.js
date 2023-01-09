@@ -117,14 +117,17 @@ function updateUIOnUserLogin() {
   updateNavOnLogin();
 }
 
-async function updateFavorites(evt) {
-  evt.preventDefault();
+async function updateFavorite(evt) {
   let $target = $(evt.target);
   let $storyId = $target.closest("li").attr("id");
 
-  let response = await User.searchFavorites(currentUser, $storyId);
-
+  let response = await User.updateFavorites(currentUser, $storyId);
+  let story = await StoryList.getStory($storyId);
+  // generateStoryMarkup(story);
+  updateFavoriteStoriesOnPage();
+  console.log(story);
   console.log(response);
+  location.reload();
 
   // for (let story in currentUser.favorites) {
   //   if (currentUser.favorites[story].storyId === $storyId) {
@@ -161,4 +164,4 @@ async function updateFavorites(evt) {
   // console.log($storyId);
 }
 
-$storiesList.on("click", updateFavorites);
+$storiesList.on("click", updateFavorite);

@@ -64,6 +64,24 @@ class StoryList {
     return new StoryList(stories);
   }
 
+  /** Generate a single story. It:
+   *
+   *  - calls the API
+   *  - builds an array of a single Story instance based on the provided id
+   */
+
+  static async getStory(storyId) {
+    // query the /stories/storyId endpoint (no auth required)
+    const response = await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: "GET",
+    });
+    const selectedStory = response.data.story;
+
+    // Create a Story instance with the information provided
+    return new Story(selectedStory);
+  }
+
   /** Adds story data to API, makes a Story instance, adds it to story list.
    * - user - the current instance of User who will post the story
    * - obj of {title, author, url}
@@ -207,20 +225,19 @@ class User {
   // .filter() returns an array of elements which meet some condition. Answers the question “Which elements meet the condition?”
   // .some() returns true or false. Answers the question “Is there ANY element which meets the condition?”
 
-  static async searchFavorites(user, storyId) {
+  static async updateFavorites(user, storyId) {
     let search = user.favorites.filter((s) => s.storyId === storyId);
     // Creates an array with the resulting match if found
 
     if (search.length > 0) {
       this.removeFavorite(user, storyId);
       console.log("remove");
-      icon = "fas fa-thumbs-up";
-      // favoriteHtml(storyId);
     } else {
       this.addFavorite(user, storyId);
       console.log("add");
-      icon = "far fa-thumbs-up";
     }
+
+    return user.favorites;
   }
   // favoriteHtml(storyId);
 

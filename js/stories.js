@@ -3,7 +3,6 @@
 // This is the global list of the stories, an instance of StoryList
 let storyList;
 let newStory;
-let icon;
 
 /** Get and show stories when site first loads. */
 
@@ -21,43 +20,33 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story, mark) {
-  console.debug("generateStoryMarkup");
+function generateStoryMarkup(story) {
+  // console.debug("generateStoryMarkup");
+  // ${currentUser ? showThumbUp(story) : ""}
+  // <span> <i id='favorite' class = 'fas fa-thumbs-up'> </i> </span>
 
   const hostName = story.getHostName();
   return $(`
-      <li id="${story.storyId}">
-      ${currentUser ? showThumbUp(story) : ""}
-      
-        <a href="${story.url}" target="a_blank" class="story-link">
-          ${story.title}
-        </a>
-        <small class="story-hostname">(${hostName})</small>
-        <small class="story-author">by ${story.author}</small>
-        <small class="story-user">posted by ${story.username}</small>
-      </li>
+  <li id="${story.storyId}">
+  ${currentUser ? showThumbUp(story) : ""}
+    <a href="${story.url}" target="a_blank" class="story-link">
+      ${story.title}
+    </a>
+    <small class="story-hostname">(${hostName})</small>
+    <small class="story-author">by ${story.author}</small>
+    <small class="story-user">posted by ${story.username}</small>
+  </li>
     `);
 }
 
 function showThumbUp(story) {
   let favoriteStatus = currentUser.favoriteCheck(story);
-  // console.log(favoriteStatus);
   if (favoriteStatus) {
-    return "<i id='favorite' class = 'fas fa-thumbs-up' </i>";
+    return `<span> <i id='favorite' class = 'fas fa-thumbs-up'> </i> </span>`;
   } else {
-    return "<i id='favorite' class = 'far fa-thumbs-up' </i>";
+    return `<span> <i id='favorite' class = 'far fa-thumbs-up'> </i> </span> `;
   }
 }
-
-// function thunbHtml(storyId) {
-//   for (let favStory in currentUser.favorites) {
-//     if (currentUser.favorites[favStory].storyId === story.storyId) {
-//       icon = "fas fa-thumbs-up";
-//     } else {
-//       icon = "far fa-thumbs-up";
-//     }
-//   }
-// }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
@@ -69,6 +58,7 @@ function putStoriesOnPage() {
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     let $story = generateStoryMarkup(story);
+    console.log($story);
     $allStoriesList.append($story);
   }
 
@@ -76,8 +66,8 @@ function putStoriesOnPage() {
 }
 /** Gets list of favorite stories from server, generates their HTML, and puts on page. */
 
-function putFavoriteStoriesOnPage() {
-  console.debug("putFavoriteStoriesOnPage");
+function updateFavoriteStoriesOnPage() {
+  console.debug("updateFavoriteStoriesOnPage");
 
   $favoriteStoriesList.empty();
 
@@ -122,19 +112,3 @@ async function addNewStory(evt) {
 }
 
 $newStoryForm.on("submit", addNewStory);
-
-// function toggleFavorites(favoriteState) {
-//   if (favoriteState == "far fa-thumbs-up") {
-//     return $(`
-//     <span>
-//     <i id="favorite" class="fas fa-thumbs-up"></i>
-//     </span>
-//   `);
-//   } else {
-//     return $(`
-//     <span>
-//     <i id="favorite" class="far fa-thumbs-up"></i>
-//     </span>
-//   `);
-//   }
-// }
