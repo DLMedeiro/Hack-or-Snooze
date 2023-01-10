@@ -26,7 +26,7 @@ Then view the site at __http://localhost:8000/__.
 
 The code is divided up into these two parts for readability and maintenance. Creating a __separation of concerns and organization__ allowing for the data and the UI to be thought about separately
 
-### Static Meaning and use Cases
+### Static Meaning and use cases
 TBD
 
 ### Javascript Files
@@ -47,4 +47,4 @@ __js/nav.js__
 Contains code to show/hide things in the navigation bar, and well as code for when a user clicks in that bar.
 
 ### Diagram of initial functions and how they call the other functions
-![Diagram of Functions](/image/design.svg "Diagram of Functions")
+![Diagram of Functions](./images/design.svg "Diagram of Functions")
