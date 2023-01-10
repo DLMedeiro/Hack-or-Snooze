@@ -29,11 +29,17 @@ $navLogin.on("click", navLoginClick);
 
 function updateNavOnLogin() {
   console.debug("updateNavOnLogin");
-  $(".main-nav-links").show();
   $navLogin.hide();
   $navLogOut.show();
+  $navSubmit.show();
+  $navFavorite.show();
+  $navOwnStories.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+// function updateNavOnLogout() {
+//   $navLogin.show();
+//   $navLogOut.hide();
+// }
 
 /** Show submit form on click of "submit" */
 

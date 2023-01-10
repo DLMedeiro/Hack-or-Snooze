@@ -48,6 +48,8 @@ function generateStoryMarkup(story) {
 function verifyTrash(story) {
   if (story.username === currentUser.username) {
     return `<span class = "delete-button"> <i id='delete' class = 'far fa-trash-alt'> </i> </span>`;
+  } else {
+    return "";
   }
 }
 

@@ -38,11 +38,24 @@ function hidePageComponents() {
   ];
   components.forEach((c) => c.hide());
 }
+function navHideOnLogout() {
+  const components = [
+    $navUserProfile,
+    $navLogOut,
+    $navSubmit,
+    $navFavorite,
+    $navOwnStories,
+  ];
+  components.forEach((c) => c.hide());
+}
 
 /** Overall function to kick off the app. */
 
 async function start() {
   console.debug("start");
+  $loginForm.hide();
+  $signupForm.hide();
+  $newStoryForm.hide();
 
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();
@@ -50,6 +63,7 @@ async function start() {
 
   // if we got a logged-in user
   if (currentUser) updateUIOnUserLogin();
+  if (!currentUser) navHideOnLogout();
 }
 
 // Once the DOM is entirely loaded, begin the app
