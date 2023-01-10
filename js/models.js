@@ -213,6 +213,36 @@ class User {
     }
   }
 
+  // Static removed
+  async addFavorite(user, storyId, story) {
+    // IMPLEMENTED
+
+    this.favorites.push(story[0]);
+
+    await axios({
+      url: `${BASE_URL}/users/${user.username}/favorites/${storyId}`,
+      method: "POST",
+      data: { token: user.loginToken },
+    });
+  }
+
+  async removeFavorite(user, storyId, story) {
+    // IMPLEMENTED
+    // Filter out the id to be removed, and return a new array with the remaining values
+
+    this.favorites = this.favorites.filter(
+      (s) => s.storyId !== story[0].storyId
+    );
+
+    await axios({
+      url: `${BASE_URL}/users/${user.username}/favorites/${storyId}`,
+      method: "DELETE",
+      data: { token: user.loginToken },
+    });
+  }
+
+  // ---------------------------------------------
+
   favoriteCheck(story) {
     return this.favorites.some((s) => s.storyId === story.storyId);
   }
@@ -225,44 +255,27 @@ class User {
   // .filter() returns an array of elements which meet some condition. Answers the question “Which elements meet the condition?”
   // .some() returns true or false. Answers the question “Is there ANY element which meets the condition?”
 
-  static async updateFavorites(user, storyId) {
-    let search = user.favorites.filter((s) => s.storyId === storyId);
-    // Creates an array with the resulting match if found
+  static async getFavoriteStories(user) {
+    // Note presence of `static` keyword: this indicates that getStories is
+    //  **not** an instance method. Rather, it is a method that is called on the
+    //  class directly. Why doesn't it make sense for getStories to be an
+    //  instance method?
 
-    if (search.length > 0) {
-      this.removeFavorite(user, storyId);
-      console.log("remove");
-    } else {
-      this.addFavorite(user, storyId);
-      console.log("add");
-    }
+    // query the /stories endpoint (no auth required)
+    const response = await axios({
+      url: `${BASE_URL}/users/${user.username}`,
+      method: "GET",
+      params: { token: user.loginToken },
+    });
 
-    return user.favorites;
+    // turn plain old story objects from API into instances of Story class
+    const favoriteStories = response.data.user.favorites;
+    // user.favorites.push(favoriteStories);
+    // console.log(user.favorites);
+    return favoriteStories;
+
+    // build an instance of our own class using the new array of stories
+    // return new StoryList(stories);
   }
   // favoriteHtml(storyId);
-
-  static async addFavorite(user, storyId) {
-    // IMPLEMENTED
-
-    const response = await axios({
-      url: `${BASE_URL}/users/${user.username}/favorites/${storyId}`,
-      method: "POST",
-      data: { token: user.loginToken },
-    });
-    console.log(response.data.user.favorites);
-
-    return response.data.user.favorites;
-  }
-
-  static async removeFavorite(user, storyId) {
-    // IMPLEMENTED
-
-    const response = await axios({
-      url: `${BASE_URL}/users/${user.username}/favorites/${storyId}`,
-      method: "DELETE",
-      data: { token: user.loginToken },
-    });
-    console.log(response.data.user.favorites);
-    return response.data.user.favorites;
-  }
 }

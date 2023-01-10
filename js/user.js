@@ -117,64 +117,15 @@ function updateUIOnUserLogin() {
   updateNavOnLogin();
 }
 
-async function updateFavorite(evt) {
-  let $target = $(evt.target);
-  let $targetI = $target.closest("i");
-  let $storyId = $target.closest("li").attr("id");
-  let $currentClass = $target.attr("class");
-  let $currentId = $target.attr("id");
+// --------------------------------------------------
+async function putFavoritesOnPage() {
+  $favoriteStoriesList.empty();
 
-  let response = await User.updateFavorites(currentUser, $storyId);
-  let story = await StoryList.getStory($storyId);
-
-  if ($target.hasClass("fas")) {
-    console.log("remove class");
-    $targetI.toggleClass("fas far");
-  } else {
-    console.log("add class");
-    $targetI.toggleClass("fas far");
+  // loop through all favorite stories and generate HTML for them
+  for (let story of currentUser.favorites) {
+    let $story = generateStoryMarkup(story);
+    $favoriteStoriesList.append($story);
   }
-  // The .hasClass() method will return true if the class is assigned to an element, even if other classes also are.
 
-  generateStoryMarkup(story);
-
-  // updateFavoriteStoriesOnPage();
-  console.log($targetI);
-  // location.reload();
-
-  // for (let story in currentUser.favorites) {
-  //   if (currentUser.favorites[story].storyId === $storyId) {
-  //     console.log("remove");
-  //   } else {
-  //     console.log("add");
-  //   }
-  // }
-
-  // let idCompare = currentUser.favorites.find(
-  //   (s) => currentUser.favorites[s].storyId == $storyId
-  // );
-
-  // await User.addFavorite(currentUser, $storyId);
-  // if (idCompare === $storyId) {
-  //   await User.removeFavorite(currentUser, $storyId);
-  // } else {
-  //   await User.addFavorite(currentUser, $storyId);
-  // }
-
-  // console.log(idCompare);
-  // console.log($storyId);
-  // Check if id is included in currentUser.favorites/
-  // for (let story in currentUser.favorites) {
-  //   if (story.storyId === $storyId) {
-  //     console.log("add");
-  //     storyId = await User.removeFavorite(currentUser, $storyId);
-  //   } else {
-  //     console.log("remove");
-  //     storyId = await User.addFavorite(currentUser, $storyId);
-  //   }
-  // }
-
-  // console.log($storyId);
+  $favoriteStoriesList.show();
 }
-
-$storiesList.on("click", updateFavorite);

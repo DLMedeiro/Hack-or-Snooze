@@ -38,6 +38,26 @@ function generateStoryMarkup(story) {
   </li>
     `);
 }
+// --------------------------------------
+
+async function updateFavorite(evt) {
+  let $target = $(evt.target);
+  let $targetI = $target.closest("i");
+  let $storyId = $target.closest("li").attr("id");
+  let $currentClass = $target.attr("class");
+  let $currentId = $target.attr("id");
+  let $story = storyList.stories.filter((story) => story.storyId === $storyId);
+
+  if ($target.hasClass("fas")) {
+    await currentUser.removeFavorite(currentUser, $storyId, $story);
+    $targetI.toggleClass("fas far");
+  } else {
+    await currentUser.addFavorite(currentUser, $storyId, $story);
+    $targetI.toggleClass("fas far");
+  }
+}
+
+$storiesList.on("click", updateFavorite);
 
 function verifyThumbUp(story) {
   let favoriteStatus = currentUser.favoriteCheck(story);
@@ -47,6 +67,8 @@ function verifyThumbUp(story) {
     return `<span id = "favoriteIcon"> <i id='favorite' class = 'far fa-thumbs-up'> </i> </span> `;
   }
 }
+
+// --------------------------------------------------
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
@@ -58,41 +80,11 @@ function putStoriesOnPage() {
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     let $story = generateStoryMarkup(story);
-    console.log($story);
     $allStoriesList.append($story);
   }
 
   $allStoriesList.show();
 }
-/** Gets list of favorite stories from server, generates their HTML, and puts on page. */
-
-function updateFavoriteStoriesOnPage() {
-  console.debug("updateFavoriteStoriesOnPage");
-
-  $favoriteStoriesList.empty();
-
-  let favoritesList = currentUser.favorites;
-
-  // loop through all of our stories and generate HTML for them
-  for (let story of favoritesList) {
-    let $story = generateStoryMarkup(story);
-    $favoriteStoriesList.append($story);
-  }
-
-  $favoriteStoriesList.show();
-}
-
-// function favoriteHtml(storyId) {
-//   for (let story of currentUser.favorites) {
-//     if (currentUser.favorites[story].storyId === storyId) {
-//       let $story = generateStoryMarkup(story, (mark = true));
-//       $allStoriesList.append($story);
-//     } else {
-//       let $story = generateStoryMarkup(story, (mark = false));
-//       $allStoriesList.append($story);
-//     }
-//   }
-// }
 
 async function addNewStory(evt) {
   evt.preventDefault();
