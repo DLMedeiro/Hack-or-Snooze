@@ -2,7 +2,6 @@
 
 // global to hold the User instance of the currently-logged-in user
 let currentUser;
-let storyId;
 
 /******************************************************************************
  * User login/signup/login
@@ -114,16 +113,4 @@ function updateUIOnUserLogin() {
   $allStoriesList.show();
 
   updateNavOnLogin();
-}
-
-async function putFavoritesOnPage() {
-  $favoriteStoriesList.empty();
-
-  // loop through all favorite stories and generate HTML for them
-  for (let story of currentUser.favorites) {
-    let $story = generateStoryMarkup(story);
-    $favoriteStoriesList.append($story);
-  }
-
-  $favoriteStoriesList.show();
 }
