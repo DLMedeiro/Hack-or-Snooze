@@ -99,7 +99,7 @@ class StoryList {
       data: { token: user.loginToken, story: newStory },
       // data: { token: localStorage.getItem("token"), story: newStory },
     });
-    return new Story(response);
+    return new Story(response.data.story);
   }
 }
 

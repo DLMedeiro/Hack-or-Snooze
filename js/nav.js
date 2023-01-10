@@ -9,7 +9,7 @@
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
-  putStoriesOnPage();
+  getAndShowStoriesOnStart();
 }
 
 $body.on("click", "#nav-all", navAllStories);

@@ -51,11 +51,12 @@ async function deleteStory(evt) {
   let $storyId = $target.closest("li").attr("id");
   let $story = storyList.stories.filter((story) => story.storyId === $storyId);
 
+  // Removing from favorites has to be done before removing from the user story - Not sure why
+  await currentUser.removeFavorite(currentUser, $storyId, $story);
   await currentUser.removeStory(currentUser, $storyId, $story);
   if ($closestListId === "all-stories-list") {
     getAndShowStoriesOnStart();
   } else if ($closestListId === "favorite-stories-list") {
-    await currentUser.removeFavorite(currentUser, $storyId, $story);
     putFavoritesOnPage();
   } else if ($closestListId === "own-stories-list") {
     putOwnStoriesOnPage();
@@ -64,7 +65,6 @@ async function deleteStory(evt) {
 $storiesList.on("click", ".delete-button", deleteStory);
 
 async function updateFavorite(evt) {
-  console.log(evt.target);
   let $target = $(evt.target);
   let $targetI = $target.closest("i");
   let $storyId = $target.closest("li").attr("id");
@@ -128,8 +128,9 @@ async function addNewStory(evt) {
   let storyData = { author, title, url };
 
   newStory = await StoryList.addStory(currentUser, storyData);
-  // console.log(newStory);
-  // currentUser.addStory(newStory);
+
+  console.log(newStory);
+  currentUser.addStory(newStory);
 
   $newStoryForm.trigger("reset");
   hidePageComponents();
