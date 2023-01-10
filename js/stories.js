@@ -2,7 +2,6 @@
 
 // This is the global list of the stories, an instance of StoryList
 let storyList;
-let newStory;
 
 /** Get and show stories when site first loads. */
 
@@ -21,9 +20,11 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup");
+  // Delete functionality
+  // Step 1: Models
+  // Step 2: Add function to HTML to identify if the posted by username matches the current username.
+  // Step 3: stories - deleteStory
 
-  // 2: Add function to HTML to identify if the posted by username matches the current username.
   const hostName = story.getHostName();
   return $(`
   <li id="${story.storyId}">
@@ -43,32 +44,42 @@ function showTrash() {
   return `<span class = "delete-button"> <i id='delete' class = 'far fa-trash-alt'> </i> </span>`;
 }
 
+// Delete functionality
+// Step 1: Models
+// Step 2: Stories - generateStoryMarkup
 // 3: Function when trash is clicked. Refresh stories after delete
+
 async function deleteStory(evt) {
-  console.log(evt.target);
   let $target = $(evt.target);
   let $closestListId = $target.closest("ol").attr("id");
   let $storyId = $target.closest("li").attr("id");
   let $story = storyList.stories.filter((story) => story.storyId === $storyId);
 
-  // Removing from favorites has to be done before removing from the user story - Not sure why
+  // ? Removing from favorites has to be done before removing from the user story - Not sure why
   await currentUser.removeFavorite(currentUser, $storyId, $story);
   await currentUser.removeStory(currentUser, $storyId, $story);
-  if ($closestListId === "all-stories-list") {
+
+  updateUI($closestListId);
+}
+$storiesList.on("click", ".delete-button", deleteStory);
+
+// Updates the stories shown based on the specific list selected to ensure the correct updated stories show on the screen.  Updates UI without a reload.  Used for deleting and favorite-ing stories
+function updateUI(closestListId) {
+  if (closestListId === "all-stories-list") {
     getAndShowStoriesOnStart();
-  } else if ($closestListId === "favorite-stories-list") {
+  } else if (closestListId === "favorite-stories-list") {
     putFavoritesOnPage();
-  } else if ($closestListId === "own-stories-list") {
+  } else if (closestListId === "own-stories-list") {
     putOwnStoriesOnPage();
   }
 }
-$storiesList.on("click", ".delete-button", deleteStory);
 
 async function updateFavorite(evt) {
   let $target = $(evt.target);
   let $targetI = $target.closest("i");
   let $storyId = $target.closest("li").attr("id");
   let $story = storyList.stories.filter((story) => story.storyId === $storyId);
+  let $closestListId = $target.closest("ol").attr("id");
 
   if ($target.hasClass("fas fa-thumbs-up")) {
     await currentUser.removeFavorite(currentUser, $storyId, $story);
@@ -77,6 +88,8 @@ async function updateFavorite(evt) {
     await currentUser.addFavorite(currentUser, $storyId, $story);
     $targetI.toggleClass("fas far");
   }
+
+  updateUI($closestListId);
 }
 
 // adding a class as the second argument allows for the selection to become more specific
@@ -117,6 +130,18 @@ function putOwnStoriesOnPage() {
   $ownStoriesList.show();
 }
 
+function putFavoritesOnPage() {
+  $favoriteStoriesList.empty();
+
+  // loop through all favorite stories and generate HTML for them
+  for (let story of currentUser.favorites) {
+    let $story = generateStoryMarkup(story);
+    $favoriteStoriesList.append($story);
+  }
+
+  $favoriteStoriesList.show();
+}
+
 async function addNewStory(evt) {
   evt.preventDefault();
 
@@ -127,14 +152,14 @@ async function addNewStory(evt) {
 
   let storyData = { author, title, url };
 
-  newStory = await StoryList.addStory(currentUser, storyData);
+  let newStory = await StoryList.addStory(currentUser, storyData);
 
-  console.log(newStory);
   currentUser.addStory(newStory);
 
   $newStoryForm.trigger("reset");
+  // Clear page and redirect to own stories page
   hidePageComponents();
-  getAndShowStoriesOnStart();
+  putOwnStoriesOnPage();
 }
 
 $newStoryForm.on("submit", addNewStory);

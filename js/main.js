@@ -1,3 +1,4 @@
+// Strict mode makes it easier to write "secure" JavaScript. Strict mode changes previously accepted "bad syntax" into real errors.
 "use strict";
 
 // So we don't have to keep re-finding things on page, find DOM elements once:
@@ -6,23 +7,20 @@ const $body = $("body");
 
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
+const $storiesList = $(".stories-list");
+const $favoriteStoriesList = $("#favorite-stories-list");
+const $ownStoriesList = $("#own-stories-list");
 
 const $loginForm = $("#login-form");
 const $signupForm = $("#signup-form");
+const $newStoryForm = $("#new-story-form");
 
 const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
-
 const $navSubmit = $("#nav-submit");
-const $newStoryForm = $("#new-story-form");
-
-const $favorite = $("#favorite");
-const $storiesList = $(".stories-list");
 const $navFavorite = $("#nav-favorite");
-const $favoriteStoriesList = $("#favorite-stories-list");
 const $navOwnStories = $("#nav-own-stories");
-const $ownStoriesList = $("#own-stories-list");
 
 /** To make it easier for individual components to show just themselves, this
  * is a useful function that hides pretty much everything on the page. After

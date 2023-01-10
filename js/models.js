@@ -1,6 +1,12 @@
 "use strict";
+// ? Some functions use static while others do not - Why?
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
+
+// Notes
+// Benefits of classes:
+// - Provides the ability to reuse the code which makes the program more efficient.
+// - The syntax is more clear and less error-prone.
 
 /******************************************************************************
  * Story: a single story in the system
@@ -24,6 +30,7 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
+    // ? Not sure what needs to change here based on current functionality working
     return "hostname.com";
   }
 }
@@ -63,24 +70,6 @@ class StoryList {
 
     // build an instance of our own class using the new array of stories
     return new StoryList(stories);
-  }
-
-  /** Generate a single story. It:
-   *
-   *  - calls the API
-   *  - builds an array of a single Story instance based on the provided id
-   */
-
-  static async getStory(storyId) {
-    // query the /stories/storyId endpoint (no auth required)
-    const response = await axios({
-      url: `${BASE_URL}/stories/${storyId}`,
-      method: "GET",
-    });
-    const selectedStory = response.data.story;
-
-    // Create a Story instance with the information provided
-    return new Story(selectedStory);
   }
 
   /** Adds story data to API, makes a Story instance, adds it to story list.
@@ -214,7 +203,7 @@ class User {
     }
   }
 
-  // Removing "static" made this.favorites available
+  // ? Removing "static" made this.favorites available
   async addFavorite(user, storyId, story) {
     // IMPLEMENTED
 
@@ -230,7 +219,6 @@ class User {
   async removeFavorite(user, storyId, story) {
     // IMPLEMENTED
     // Filter out the id to be removed, and return a new array with the remaining values
-
     this.favorites = this.favorites.filter(
       (s) => s.storyId !== story[0].storyId
     );
@@ -243,13 +231,18 @@ class User {
   }
 
   favoriteCheck(story) {
+    // Filters through the favorites list to see if any if the ids match. s = story in the favorites list
     return this.favorites.some((s) => s.storyId === story.storyId);
   }
   // .filter() returns an array of elements which meet some condition. Answers the question “Which elements meet the condition?”
   // .some() returns true or false. Answers the question “Is there ANY element which meets the condition?”
 
+  // Delete functionality
   // Step 1: create removeStory function to update API and UI
+  // Step 2: Stories
+
   async removeStory(user, storyId, story) {
+    // Filter out the id to be removed, and return a new array with the remaining values
     this.ownStories = this.ownStories.filter(
       (s) => s.storyId !== story[0].storyId
     );
