@@ -22,13 +22,18 @@ async function getAndShowStoriesOnStart() {
 function generateStoryMarkup(story) {
   // Delete functionality
   // Step 1: Models
-  // Step 2: Add function to HTML to identify if the posted by username matches the current username.
+  // Step 2: Add function to HTML to identify if the posted by username matches the current username and add trash if true.
   // Step 3: stories - deleteStory
+
+  // Note:
+  // ${story.username === currentUser.username ? showTrash() : ""}
+  // currentUsername is underfined if logged out -> throwing error
 
   const hostName = story.getHostName();
   return $(`
   <li id="${story.storyId}">
-  ${story.username === currentUser.username ? showTrash() : ""}
+  ${currentUser ? verifyTrash(story) : ""}
+
   ${currentUser ? verifyThumbUp(story) : ""}
     <a href="${story.url}" target="a_blank" class="story-link">
       ${story.title}
@@ -40,8 +45,10 @@ function generateStoryMarkup(story) {
     `);
 }
 
-function showTrash() {
-  return `<span class = "delete-button"> <i id='delete' class = 'far fa-trash-alt'> </i> </span>`;
+function verifyTrash(story) {
+  if (story.username === currentUser.username) {
+    return `<span class = "delete-button"> <i id='delete' class = 'far fa-trash-alt'> </i> </span>`;
+  }
 }
 
 // Delete functionality
