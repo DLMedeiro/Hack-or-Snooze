@@ -99,7 +99,7 @@ class StoryList {
       data: { token: user.loginToken, story: newStory },
       // data: { token: localStorage.getItem("token"), story: newStory },
     });
-    return new Story(response.data);
+    return new Story(response);
   }
 }
 
@@ -247,4 +247,21 @@ class User {
   }
   // .filter() returns an array of elements which meet some condition. Answers the question “Which elements meet the condition?”
   // .some() returns true or false. Answers the question “Is there ANY element which meets the condition?”
+
+  // Step 1: create removeStory function to update API and UI
+  async removeStory(user, storyId, story) {
+    this.ownStories = this.ownStories.filter(
+      (s) => s.storyId !== story[0].storyId
+    );
+
+    await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: "DELETE",
+      data: { token: user.loginToken },
+    });
+  }
+
+  addStory(story) {
+    this.ownStories.push(story);
+  }
 }

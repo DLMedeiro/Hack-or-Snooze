@@ -23,9 +23,11 @@ async function getAndShowStoriesOnStart() {
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup");
 
+  // 2: Add function to HTML to identify if the posted by username matches the current username.
   const hostName = story.getHostName();
   return $(`
   <li id="${story.storyId}">
+  ${story.username === currentUser.username ? showTrash() : ""}
   ${currentUser ? verifyThumbUp(story) : ""}
     <a href="${story.url}" target="a_blank" class="story-link">
       ${story.title}
@@ -37,13 +39,38 @@ function generateStoryMarkup(story) {
     `);
 }
 
+function showTrash() {
+  return `<span class = "delete-button"> <i id='delete' class = 'far fa-trash-alt'> </i> </span>`;
+}
+
+// 3: Function when trash is clicked. Refresh stories after delete
+async function deleteStory(evt) {
+  console.log(evt.target);
+  let $target = $(evt.target);
+  let $closestListId = $target.closest("ol").attr("id");
+  let $storyId = $target.closest("li").attr("id");
+  let $story = storyList.stories.filter((story) => story.storyId === $storyId);
+
+  await currentUser.removeStory(currentUser, $storyId, $story);
+  if ($closestListId === "all-stories-list") {
+    getAndShowStoriesOnStart();
+  } else if ($closestListId === "favorite-stories-list") {
+    await currentUser.removeFavorite(currentUser, $storyId, $story);
+    putFavoritesOnPage();
+  } else if ($closestListId === "own-stories-list") {
+    putOwnStoriesOnPage();
+  }
+}
+$storiesList.on("click", ".delete-button", deleteStory);
+
 async function updateFavorite(evt) {
+  console.log(evt.target);
   let $target = $(evt.target);
   let $targetI = $target.closest("i");
   let $storyId = $target.closest("li").attr("id");
   let $story = storyList.stories.filter((story) => story.storyId === $storyId);
 
-  if ($target.hasClass("fas")) {
+  if ($target.hasClass("fas fa-thumbs-up")) {
     await currentUser.removeFavorite(currentUser, $storyId, $story);
     $targetI.toggleClass("fas far");
   } else {
@@ -52,14 +79,15 @@ async function updateFavorite(evt) {
   }
 }
 
-$storiesList.on("click", updateFavorite);
+// adding a class as the second argument allows for the selection to become more specific
+$storiesList.on("click", ".favoriteBtn", updateFavorite);
 
 function verifyThumbUp(story) {
   let favoriteStatus = currentUser.favoriteCheck(story);
   if (favoriteStatus) {
-    return `<span id = "favoriteIcon"> <i id='favorite' class = 'fas fa-thumbs-up'> </i> </span>`;
+    return `<span class = "favoriteBtn"> <i id='favorite' class = 'fas fa-thumbs-up'> </i> </span>`;
   } else {
-    return `<span id = "favoriteIcon"> <i id='favorite' class = 'far fa-thumbs-up'> </i> </span> `;
+    return `<span class = "favoriteBtn"> <i id='favorite' class = 'far fa-thumbs-up'> </i> </span> `;
   }
 }
 
@@ -70,13 +98,23 @@ function putStoriesOnPage() {
 
   $allStoriesList.empty();
 
-  // loop through all of our stories and generate HTML for them
+  // loop through all stories and generate HTML for them
   for (let story of storyList.stories) {
     let $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
 
   $allStoriesList.show();
+}
+
+function putOwnStoriesOnPage() {
+  $ownStoriesList.empty();
+  // loop through all user owned stories and generate HTML for them
+  for (let story of currentUser.ownStories) {
+    let $story = generateStoryMarkup(story);
+    $ownStoriesList.append($story);
+  }
+  $ownStoriesList.show();
 }
 
 async function addNewStory(evt) {
@@ -90,6 +128,8 @@ async function addNewStory(evt) {
   let storyData = { author, title, url };
 
   newStory = await StoryList.addStory(currentUser, storyData);
+  // console.log(newStory);
+  // currentUser.addStory(newStory);
 
   $newStoryForm.trigger("reset");
   hidePageComponents();
