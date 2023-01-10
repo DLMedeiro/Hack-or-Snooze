@@ -117,7 +117,6 @@ function updateUIOnUserLogin() {
   updateNavOnLogin();
 }
 
-// --------------------------------------------------
 async function putFavoritesOnPage() {
   $favoriteStoriesList.empty();
 

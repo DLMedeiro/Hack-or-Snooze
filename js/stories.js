@@ -22,8 +22,6 @@ async function getAndShowStoriesOnStart() {
 
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup");
-  // ${currentUser ? showThumbUp(story) : ""}
-  // <span> <i id='favorite' class = 'fas fa-thumbs-up'> </i> </span>
 
   const hostName = story.getHostName();
   return $(`
@@ -38,14 +36,11 @@ function generateStoryMarkup(story) {
   </li>
     `);
 }
-// --------------------------------------
 
 async function updateFavorite(evt) {
   let $target = $(evt.target);
   let $targetI = $target.closest("i");
   let $storyId = $target.closest("li").attr("id");
-  let $currentClass = $target.attr("class");
-  let $currentId = $target.attr("id");
   let $story = storyList.stories.filter((story) => story.storyId === $storyId);
 
   if ($target.hasClass("fas")) {
@@ -67,8 +62,6 @@ function verifyThumbUp(story) {
     return `<span id = "favoriteIcon"> <i id='favorite' class = 'far fa-thumbs-up'> </i> </span> `;
   }
 }
-
-// --------------------------------------------------
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 

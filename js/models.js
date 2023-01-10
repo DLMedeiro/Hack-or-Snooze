@@ -50,6 +50,7 @@ class StoryList {
     //  **not** an instance method. Rather, it is a method that is called on the
     //  class directly. Why doesn't it make sense for getStories to be an
     //  instance method?
+    // ? a static method can be accessed from anywhere in your code without having to create an instance of the class
 
     // query the /stories endpoint (no auth required)
     const response = await axios({
@@ -213,7 +214,7 @@ class User {
     }
   }
 
-  // Static removed
+  // Removing "static" made this.favorites available
   async addFavorite(user, storyId, story) {
     // IMPLEMENTED
 
@@ -241,41 +242,9 @@ class User {
     });
   }
 
-  // ---------------------------------------------
-
   favoriteCheck(story) {
     return this.favorites.some((s) => s.storyId === story.storyId);
   }
-  // s => (s.storyId === story.storyId)
-  // function (s) {
-  //   if (s.storyId === story.storyId){
-  //     return s
-  //   }
-  // }
   // .filter() returns an array of elements which meet some condition. Answers the question “Which elements meet the condition?”
   // .some() returns true or false. Answers the question “Is there ANY element which meets the condition?”
-
-  static async getFavoriteStories(user) {
-    // Note presence of `static` keyword: this indicates that getStories is
-    //  **not** an instance method. Rather, it is a method that is called on the
-    //  class directly. Why doesn't it make sense for getStories to be an
-    //  instance method?
-
-    // query the /stories endpoint (no auth required)
-    const response = await axios({
-      url: `${BASE_URL}/users/${user.username}`,
-      method: "GET",
-      params: { token: user.loginToken },
-    });
-
-    // turn plain old story objects from API into instances of Story class
-    const favoriteStories = response.data.user.favorites;
-    // user.favorites.push(favoriteStories);
-    // console.log(user.favorites);
-    return favoriteStories;
-
-    // build an instance of our own class using the new array of stories
-    // return new StoryList(stories);
-  }
-  // favoriteHtml(storyId);
 }
