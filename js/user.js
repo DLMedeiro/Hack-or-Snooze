@@ -110,8 +110,10 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
-  hidePageComponents();
 
+  // ? thumbs up not showing on initial page load when user logs in.
+  // "$allStoriesList.show()"" -> provided with base code
+  // Not sure whay adding "putStoriesOnPage()" doesn't work?"
   $allStoriesList.show();
 
   updateNavOnLogin();

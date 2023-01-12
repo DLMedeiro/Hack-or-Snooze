@@ -1,5 +1,6 @@
 "use strict";
 // ? Some functions use static while others do not - Why?
+// Notes on getStories() and addFavorite()
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
 

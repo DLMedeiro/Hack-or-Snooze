@@ -27,7 +27,7 @@ function generateStoryMarkup(story) {
 
   // Note:
   // ${story.username === currentUser.username ? showTrash() : ""}
-  // currentUsername is underfined if logged out -> throwing error
+  // currentUsername is undefined if logged out -> throwing error
 
   const hostName = story.getHostName();
   return $(`
